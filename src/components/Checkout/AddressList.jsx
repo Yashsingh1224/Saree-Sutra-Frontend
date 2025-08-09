@@ -12,8 +12,8 @@ export default function AddressList({ addresses, selectedId, onSelect, onAddNew 
                         <label
                             key={addr.id}
                             className={`block border rounded-lg p-4 cursor-pointer transition ${selectedId === addr.id
-                                    ? "border-amber-600 bg-amber-50"
-                                    : "border-gray-200 hover:border-amber-400"
+                                ? "border-amber-600 bg-amber-50"
+                                : "border-gray-200 hover:border-amber-400"
                                 }`}
                         >
                             <input

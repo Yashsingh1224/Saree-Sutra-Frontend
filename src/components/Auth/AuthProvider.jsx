@@ -2,12 +2,12 @@ import { createContext, useState, useEffect } from "react";
 import { loginUser, signupUser } from "../../utils/api";
 
 export const AuthContext = createContext();
+AuthContext.displayName = "AuthContext";
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        // Try to restore user from localStorage on app load
         const token = localStorage.getItem("token");
         const userData = localStorage.getItem("user");
         if (token && userData) {

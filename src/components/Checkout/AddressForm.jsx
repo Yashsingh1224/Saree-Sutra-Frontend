@@ -29,7 +29,7 @@ export default function AddressForm({ onAdd, onCancel }) {
         setError("");
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:5000/api/addresses", {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/addresses`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export default function AddressForm({ onAdd, onCancel }) {
                 value={form.address_line2}
                 onChange={handleChange}
             />
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <input
                     name="city"
                     placeholder="City"
@@ -96,7 +96,7 @@ export default function AddressForm({ onAdd, onCancel }) {
                     required
                 />
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <input
                     name="postal_code"
                     placeholder="Postal Code"
