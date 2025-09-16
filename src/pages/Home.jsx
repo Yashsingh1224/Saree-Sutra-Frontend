@@ -1,32 +1,57 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import ConfirmModal from "../components/Popups/ConfirmModal";
+import AnimatedTestimonialsDemo from "../components/ui/AnimatedTestimonialsDemo";
 
-const categories = [
-    {
-        name: "Banarasi",
-        img:
-            "https://www.meenabazaar.shop/cdn/shop/products/MBS1003TUSSAR-10.jpg?v=1650831039",
-    },
-    {
-        name: "Kanjivaram",
-        img:
-            "https://assets.panashindia.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/2/3/2351sr07-407.jpg",
-    },
-    {
-        name: "Chiffon",
-        img:
-            "https://www.karagiri.com/cdn/shop/products/banarasi-saree-mahogany-maroon-banarasi-saree-silk-saree-online-31828994162881.jpg?v=1648552948",
-    },
-    {
-        name: "Silk",
-        img:
-            "https://media.samyakk.com/pub/media/tagalys/product_images/s/r/sr27355.jpg",
-    },
-];
+// --- START: Placeholders for your existing components ---
+// As before, please replace these with your actual imports.
+
+const useAuth = () => ({ user: null }); // Mock hook. Replace with: import { useAuth } from "../hooks/useAuth";
+const ConfirmModal = ({ message, onConfirm, onCancel }) => ( // Mock Component. Replace with: import ConfirmModal from "../components/Popups/ConfirmModal";
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg p-8 shadow-xl text-center">
+            <p className="mb-4">{message}</p>
+            <div className="flex justify-center gap-4">
+                <button onClick={onConfirm} className="px-4 py-2 bg-red-500 text-white rounded">Confirm</button>
+                <button onClick={onCancel} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+            </div>
+        </div>
+    </div>
+);
+
+
+// --- END: Placeholders ---
+
+// Custom hook for on-scroll animations
+const useInView = (options) => {
+    const ref = useRef(null);
+    const [isInView, setIsInView] = useState(false);
+    useEffect(() => {
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                setIsInView(true);
+                observer.unobserve(entry.target);
+            }
+        }, options);
+        if (ref.current) observer.observe(ref.current);
+        return () => { if (ref.current) observer.unobserve(ref.current); };
+    }, [ref, options]);
+    return [ref, isInView];
+};
+
+// --- Data and SVG Icons ---
+const categories = [{ name: "Banarasi", img: "https://www.meenabazaar.shop/cdn/shop/products/MBS1003TUSSAR-10.jpg?v=1650831039" }, { name: "Kanjivaram", img: "https://assets.panashindia.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/2/3/2351sr07-407.jpg" }, { name: "Chiffon", img: "https://www.karagiri.com/cdn/shop/products/banarasi-saree-mahogany-maroon-banarasi-saree-silk-saree-online-31828994162881.jpg?v=1648552948" }, { name: "Silk", img: "https://media.samyakk.com/pub/media/tagalys/product_images/s/r/sr27355.jpg" }];
+const designers = [{ name: "Radhika Sharma", img: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", description: "Bringing traditional handloom with a modern twist to every saree." }, { name: "Anil Kumar", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80", description: "Expert in silk sarees with exclusive, limited edition collections." }, { name: "Meena Joshi", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80", description: "Crafting exquisite sarees with intricate embroidery work." }];
+const HandIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.63 2.18a14.98 14.98 0 00-5.84 7.38m5.84 2.58a6 6 0 01-5.84-7.38m5.84 7.38a6 6 0 015.84 7.38m-5.84-7.38L15.59 14.37" /></svg>;
+const HeartIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>;
+const SparklesIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.293 2.293a1 1 0 010 1.414L10 16l-4-4 6.293-6.293a1 1 0 011.414 0z" /></svg>;
+const WashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>;
+const SunIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>;
+const HangerIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>;
+const IronIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>;
+const careTips = [{ icon: <WashIcon />, title: "Gentle Wash", desc: "Hand wash with mild detergents." }, { icon: <SunIcon />, title: "Avoid Sunlight", desc: "Dry in shade to preserve color." }, { icon: <HangerIcon />, title: "Proper Storage", desc: "Store in a cool, dry place." }, { icon: <IronIcon />, title: "Low Heat Iron", desc: "Iron on low heat or use a cloth." }];
 
 export default function Home() {
+    // --- State and Hooks ---
     const [bestSellers, setBestSellers] = useState([]);
     const [cartMsg, setCartMsg] = useState("");
     const [cartError, setCartError] = useState("");
@@ -37,36 +62,15 @@ export default function Home() {
     const [showConfirm, setShowConfirm] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
 
-    // Testimonials slider state
-    const [currentTestimonial, setCurrentTestimonial] = useState(0);
-    const testimonialTimer = useRef(null);
+    // --- Animation Refs ---
+    const [heroRef, heroInView] = useInView({ threshold: 0.2 });
+    const [categoriesRef, categoriesInView] = useInView({ threshold: 0.1 });
+    const [bestsellersRef, bestsellersInView] = useInView({ threshold: 0.05 });
+    const [whyChooseUsRef, whyChooseUsInView] = useInView({ threshold: 0.1 });
+    const [designersRef, designersInView] = useInView({ threshold: 0.1 });
+    const [careTipsRef, careTipsInView] = useInView({ threshold: 0.1 });
 
-    const colorClassMap = {
-        "amber-700": "text-amber-700",
-        "pink-700": "text-pink-700",
-    };
-
-    const testimonials = [
-        {
-            id: 1,
-            text: "Absolutely loved the saree quality and fast delivery!",
-            author: "Priya S.",
-            color: "amber-700",
-        },
-        {
-            id: 2,
-            text: "The designs are so unique and elegant. Highly recommended.",
-            author: "Anjali R.",
-            color: "pink-700",
-        },
-        {
-            id: 3,
-            text: "Great service and beautiful packaging. Will shop again!",
-            author: "Meena K.",
-            color: "amber-700",
-        },
-    ];
-
+    // --- Restored Original Data Fetching ---
     useEffect(() => {
         async function fetchBestSellers() {
             try {
@@ -84,17 +88,7 @@ export default function Home() {
         fetchBestSellers();
     }, []);
 
-    useEffect(() => {
-        // Auto slide testimonials every 5 seconds
-        testimonialTimer.current = setInterval(() => {
-            setCurrentTestimonial((prev) =>
-                prev === testimonials.length - 1 ? 0 : prev + 1
-            );
-        }, 5000);
-
-        return () => clearInterval(testimonialTimer.current);
-    }, []);
-
+    // --- Restored Original Functionalities ---
     const handleAddToCart = async (productId) => {
         setCartMsg("");
         setCartError("");
@@ -106,51 +100,45 @@ export default function Home() {
             const token = localStorage.getItem("token");
             const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token,
-                },
+                headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
                 body: JSON.stringify({ product_id: productId, quantity: 1 }),
             });
             const data = await res.json();
             if (res.ok) {
                 setCartMsg("Added to cart!");
-                setTimeout(() => setCartMsg(""), 1500);
+                setTimeout(() => setCartMsg(""), 2000);
             } else {
                 setCartError(data.error || "Could not add to cart.");
-                setTimeout(() => setCartError(""), 2000);
+                setTimeout(() => setCartError(""), 2500);
             }
         } catch {
             setCartError("Network error.");
-            setTimeout(() => setCartError(""), 2000);
+            setTimeout(() => setCartError(""), 2500);
         }
     };
 
     const handleConfirmDelete = async () => {
         if (!productToDelete) return;
-
         setDeleteMsg("");
         setDeleteError("");
         const token = localStorage.getItem("token");
         try {
             const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/${productToDelete}`, {
                 method: "DELETE",
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
+                headers: { Authorization: "Bearer " + token },
             });
             if (res.ok) {
                 setBestSellers((prev) => prev.filter((item) => item.id !== productToDelete));
                 setDeleteMsg("Product deleted!");
-                setTimeout(() => setDeleteMsg(""), 1500);
+                setTimeout(() => setDeleteMsg(""), 2000);
             } else {
                 const data = await res.json();
                 setDeleteError(data.error || "Could not delete product.");
-                setTimeout(() => setDeleteError(""), 2000);
+                setTimeout(() => setDeleteError(""), 2500);
             }
         } catch {
             setDeleteError("Network error.");
-            setTimeout(() => setDeleteError(""), 2000);
+            setTimeout(() => setDeleteError(""), 2500);
         } finally {
             setShowConfirm(false);
             setProductToDelete(null);
@@ -163,283 +151,125 @@ export default function Home() {
     };
 
     return (
-        <div className="bg-gradient-to-br from-amber-50 via-white to-pink-50 min-h-screen font-['Poppins']">
-            {/* Hero Section */}
-            <section className="pt-48 pb-24 px-6 md:px-20 flex flex-col md:flex-row items-center gap-12 bg-gradient-to-tr from-pink-100 via-white to-amber-50">
-                <div className="flex-1 text-center md:text-left animate-fade-in-up">
-                    <h1 className="text-5xl md:text-6xl font-extrabold text-amber-700 mb-6 leading-tight font-['Yatra One'] drop-shadow-lg relative">
-                        Embrace Tradition.
-                        <br />
-                        Celebrate Modernity.
+        <div className="bg-gradient-to-br from-amber-50 via-white to-pink-50 min-h-screen font-['Poppins'] select-none">
+            {/* --- Immersive Hero Section --- */}
+            <section ref={heroRef} className="relative h-screen flex items-center justify-center text-center text-white px-4">
+                <div className="absolute inset-0 bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('https://www.sacredweaves.com/cdn/shop/articles/Main_Banner_1600x.jpg?v=1614664566')" }}></div>
+                <div className="absolute inset-0 bg-black/40"></div>
+                <div className={`relative transition-all duration-1000 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <h1 className="text-5xl md:text-7xl font-extrabold font-['Yatra One'] tracking-wider" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
+                        Draped in Dreams
                     </h1>
-                    <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-lg font-medium">
-                        Discover handpicked sarees that blend timeless elegance with contemporary style.
+                    <p className={`mt-6 text-lg md:text-xl max-w-2xl mx-auto transition-opacity duration-1000 delay-300 ${heroInView ? 'opacity-100' : 'opacity-0'}`} style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
+                        Discover handcrafted sarees that blend timeless elegance with contemporary style.
                     </p>
-                    <a
-                        href="/shop"
-                        className="inline-block px-10 py-4 bg-amber-600 text-white rounded-full shadow-lg hover:bg-amber-700 hover:scale-105 transition-transform duration-300 font-semibold text-lg select-none"
-                    >
-                        Shop Now
+                    <a href="/shop" className={`mt-10 inline-block px-12 py-4 bg-amber-600 text-white rounded-full shadow-lg hover:bg-amber-700 hover:scale-105 transition-all duration-500 delay-500 ${heroInView ? 'opacity-100 scale-100' : 'opacity-0 scale-90'} font-semibold text-lg`}>
+                        Shop The Collection
                     </a>
-                </div>
-                <div className="flex-1 flex justify-center relative z-0">
-                    <img
-                        src="https://www.sacredweaves.com/cdn/shop/articles/Main_Banner_1600x.jpg?v=1614664566"
-                        alt="Beautiful Saree"
-                        className="rounded-xl shadow-2xl w-full max-w-lg object-cover border-8 border-amber-200 animate-zoom-in"
-                    />
                 </div>
             </section>
 
-            {/* Featured Categories */}
-            <section className="pt-16 pb-20 px-6 md:px-20 max-w-7xl mx-auto">
-                <h2 className="text-3xl font-bold text-center text-pink-700 mb-12 font-['Yatra One'] animate-fade-in-up">
-                    Featured Categories
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
+            {/* --- Interactive Category Cards --- */}
+            <section ref={categoriesRef} className="py-20 px-6 md:px-20 max-w-7xl mx-auto">
+                <h2 className={`transition-all duration-1000 ${categoriesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} text-4xl font-bold text-center text-pink-700 mb-14 font-['Yatra One'] tracking-wide`}>Explore Our Weaves</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {categories.map((cat, idx) => (
-                        <div
-                            key={cat.name}
-                            className="bg-white rounded-3xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300 cursor-pointer hover:-translate-y-2 animate-fade-in-up"
-                            style={{ animationDelay: `${idx * 300}ms` }}
-                        >
-                            <img
-                                src={cat.img}
-                                alt={cat.name}
-                                className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="p-6 text-center">
-                                <h3 className="text-2xl font-bold text-amber-700 mb-3">{cat.name}</h3>
-                                <a
-                                    href={`/categories/${cat.name.toLowerCase()}`}
-                                    className="inline-block px-5 py-2 mt-3 bg-pink-200 text-pink-700 rounded-full font-semibold hover:bg-pink-300 transition"
-                                >
-                                    Explore
-                                </a>
+                        <div key={cat.name} className={`relative rounded-2xl shadow-lg overflow-hidden group cursor-pointer transition-all duration-1000 ${categoriesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${idx * 150}ms` }}>
+                            <img src={cat.img} alt={cat.name} className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center p-4">
+                                <h3 className="text-2xl font-bold text-white text-center font-['Yatra One'] tracking-wider" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.7)' }}>{cat.name}</h3>
                             </div>
                         </div>
                     ))}
                 </div>
             </section>
 
-            {/* Best Sellers */}
-            <section className="pt-16 pb-24 px-6 md:px-20 max-w-7xl mx-auto bg-gradient-to-r from-amber-50 via-pink-50 to-white rounded-2xl">
-                <h2 className="text-3xl font-bold text-center text-amber-700 mb-12 font-['Yatra One'] animate-fade-in-up">
-                    Best Sellers
-                </h2>
-                {/* Messages */}
-                <div className="max-w-2xl mx-auto text-center mb-6">
-                    {cartMsg && (
-                        <div className="text-green-700 font-semibold mb-3 animate-fade-in">{cartMsg}</div>
-                    )}
-                    {cartError && (
-                        <div className="text-red-600 font-semibold mb-3 animate-fade-in">{cartError}</div>
-                    )}
-                    {deleteMsg && (
-                        <div className="text-green-700 font-semibold mb-3 animate-fade-in">{deleteMsg}</div>
-                    )}
-                    {deleteError && (
-                        <div className="text-red-600 font-semibold mb-3 animate-fade-in">{deleteError}</div>
-                    )}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mx-auto max-w-6xl">
-                    {bestSellers.length === 0 ? (
-                        <p className="col-span-full text-center text-gray-400 font-semibold text-lg">
-                            No products found.
-                        </p>
-                    ) : (
-                        bestSellers.map((item, idx) => (
-                            <div
-                                key={item.id}
-                                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 animate-fade-in-up"
-                                style={{ animationDelay: `${idx * 240}ms` }}
-                            >
-                                <img
-                                    src={item.image_url}
-                                    alt={item.name}
-                                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                                <div className="p-6 text-center">
+            {/* --- Best Sellers --- */}
+            <section ref={bestsellersRef} className="py-20 px-6 md:px-20 bg-white/50">
+                <div className={`transition-all duration-1000 ${bestsellersInView ? 'opacity-100' : 'opacity-0'} max-w-7xl mx-auto`}>
+                    <h2 className="text-4xl font-bold text-center text-amber-700 mb-4 font-['Yatra One'] tracking-wide">Our Best Sellers</h2>
+                    <div className="max-w-3xl mx-auto text-center mb-10 min-h-[1.5rem]">
+                        {cartMsg && <div className="text-green-700 font-semibold">{cartMsg}</div>}
+                        {cartError && <div className="text-red-600 font-semibold">{cartError}</div>}
+                        {deleteMsg && <div className="text-green-700 font-semibold">{deleteMsg}</div>}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {bestSellers.slice(0, 6).map((item, idx) => (
+                            <div key={item.id} className={`bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden flex flex-col transition-all duration-1000 hover:shadow-2xl hover:-translate-y-2 ${bestsellersInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${idx * 150}ms` }}>
+                                <img src={item.image_url} alt={item.name} className="w-full h-72 object-cover" />
+                                <div className="p-6 text-center flex flex-col flex-grow">
                                     <h3 className="text-xl font-semibold text-pink-700 mb-2">{item.name}</h3>
-                                    <p className="text-amber-700 font-bold mb-4 text-lg">₹{item.price}</p>
-                                    <div className="flex justify-center gap-4">
-                                        {!user?.is_admin && (
-                                            <button
-                                                className="px-6 py-2 bg-amber-600 text-white rounded-full hover:bg-amber-700 transition font-semibold select-none"
-                                                onClick={() => handleAddToCart(item.id)}
-                                            >
-                                                Add to Cart
-                                            </button>
-                                        )}
-                                        {user?.is_admin && (
-                                            <button
-                                                className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition font-semibold select-none"
-                                                onClick={() => {
-                                                    setProductToDelete(item.id);
-                                                    setShowConfirm(true);
-                                                }}
-                                            >
-                                                Delete
-                                            </button>
-                                        )}
-                                    </div>
+                                    <p className="text-amber-700 font-bold mb-4 text-lg mt-auto">₹{item.price}</p>
+                                    {!user?.is_admin && <button onClick={() => handleAddToCart(item.id)} className="w-full mt-2 px-7 py-2.5 bg-amber-600 text-white rounded-full hover:bg-amber-700 transition font-semibold">Add to Cart</button>}
+                                    {user?.is_admin && <button onClick={() => { setProductToDelete(item.id); setShowConfirm(true); }} className="w-full mt-2 px-7 py-2.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition font-semibold">Delete</button>}
                                 </div>
                             </div>
-                        ))
-                    )}
-                </div>
-            </section>
-
-            {/* Why Choose Us */}
-            <section className="py-16 px-6 md:px-20 max-w-7xl mx-auto">
-                <h2 className="text-2xl md:text-3xl font-bold text-center text-pink-700 mb-12 font-['Yatra One'] animate-fade-in-up">
-                    Why Choose Us?
-                </h2>
-                <div className="flex flex-col md:flex-row justify-center items-center gap-14">
-                    <div className="flex flex-col items-center text-center max-w-xs animate-fade-in-up">
-                        <span className="text-5xl text-amber-600 mb-3">🧵</span>
-                        <h3 className="text-lg font-semibold text-gray-800 mb-1">Authentic Fabrics</h3>
-                        <p className="text-gray-600 px-4">
-                            We ensure the best quality and authentic fabric for all our sarees.
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center text-center max-w-xs animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                        <span className="text-5xl text-amber-600 mb-3">💳</span>
-                        <h3 className="text-lg font-semibold text-gray-800 mb-1">Secure Payments</h3>
-                        <p className="text-gray-600 px-4">
-                            Safe and multiple payment options to choose from.
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center text-center max-w-xs animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                        <span className="text-5xl text-amber-600 mb-3">🚚</span>
-                        <h3 className="text-lg font-semibold text-gray-800 mb-1">Fast Delivery</h3>
-                        <p className="text-gray-600 px-4">
-                            Quick and reliable delivery to your doorstep.
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center text-center max-w-xs animate-fade-in-up" style={{ animationDelay: '300ms' }}>
-                        <span className="text-5xl text-amber-600 mb-3">🔄</span>
-                        <h3 className="text-lg font-semibold text-gray-800 mb-1">Easy Returns</h3>
-                        <p className="text-gray-600 px-4">
-                            Hassle-free returns within stipulated time for your satisfaction.
-                        </p>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* Testimonials */}
-            <section className="relative max-w-4xl mx-auto overflow-hidden rounded-2xl bg-white p-10 shadow-lg">
-                <div
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{
-                        width: `${testimonials.length * 100}%`,
-                        transform: `translateX(-${currentTestimonial * 100}%)`,
-                    }}
-
-                >
-                    {testimonials.map(({ id, text, author, color }) => (
-                        <blockquote
-                            key={id}
-                            className="w-full flex-shrink-0 px-6 md:px-12 text-center flex flex-col justify-center"
-                        >
-                            <p className="italic text-lg mb-6">"{text}"</p>
-                            <footer className={`${colorClassMap[color] || "text-gray-800"} text-center font-semibold`}>
-                                — {author}
-                            </footer>
-                        </blockquote>
-                    ))}
-                </div>
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4">
-                    {testimonials.map((_, i) => (
-                        <button
-                            key={i}
-                            className={`w-3 h-3 rounded-full ${i === currentTestimonial ? "bg-amber-600" : "bg-gray-300"} transition`}
-                            onClick={() => setCurrentTestimonial(i)}
-                            aria-label={`Go to testimonial ${i + 1}`}
-                        />
-
-                    ))}
-                </div>
-            </section>
-
-
-            {/* New Section: Latest Trends (Example Section) */}
-            <section className="py-16 px-6 md:px-20 max-w-7xl mx-auto">
-                <h2 className="text-3xl font-bold mb-12 text-center text-pink-700 font-['Yatra One'] animate-fade-in">
-                    Latest Trends & Styles
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                    {/* Example blog/style cards */}
-                    {[
-                        {
-                            id: 1,
-                            title: "The Timeless Elegance of Handwoven Banarasi",
-                            img: "https://www.mystorybook.com/wp-content/uploads/2019/12/handwoven-banarasi-silk-saree-1024x768.jpg",
-                        },
-                        {
-                            id: 2,
-                            title: "How to Style Kanjivaram Sarees for Weddings",
-                            img: "https://cdn.shopify.com/s/files/1/0142/1411/3038/articles/DSC_4399_1024x1024_crop_center.jpg?v=1659276324",
-                        },
-                        {
-                            id: 3,
-                            title: "Chiffon Saree Draping Styles You Must Try",
-                            img: "https://assetscdn.paytm.com/images/catalog/product/F/FA/FASHAFAU-DESIG85C484AF26EFE67/1591247831566_0.jpg",
-                        },
-                    ].map(({ id, title, img }) => (
-                        <article
-                            key={id}
-                            className="rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 cursor-pointer group animate-fade-in-up"
-                        >
-                            <img
-                                src={img}
-                                alt={title}
-                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <h3 className="p-4 text-lg font-semibold text-pink-700">{title}</h3>
-                        </article>
-                    ))}
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="bg-white py-8 md:py-10 mt-16 shadow-inner text-center text-gray-600 text-sm select-none">
-                <div className="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto px-4 text-sm">
-                    <div>&copy; {new Date().getFullYear()} SareeSutra. All rights reserved.</div>
-                    <div className="flex gap-5 mt-3 md:mt-0">
-                        <a
-                            href="#"
-                            className="hover:text-amber-700 transition font-medium"
-                            aria-label="Instagram"
-                        >
-                            Instagram
-                        </a>
-                        <a
-                            href="#"
-                            className="hover:text-amber-700 transition font-medium"
-                            aria-label="Facebook"
-                        >
-                            Facebook
-                        </a>
-                        <a
-                            href="#"
-                            className="hover:text-amber-700 transition font-medium"
-                            aria-label="WhatsApp"
-                        >
-                            WhatsApp
-                        </a>
+            {/* --- "Why Choose Us?" Section --- */}
+            <section ref={whyChooseUsRef} className={`transition-all duration-1000 ${whyChooseUsInView ? 'opacity-100' : 'opacity-0'} py-20 px-6 md:px-20`}>
+                <div className="text-center max-w-7xl mx-auto">
+                    <h2 className="text-4xl font-bold text-amber-800 font-['Yatra One'] tracking-wide">Why Choose Fabrix?</h2>
+                    <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+                        <div className="p-8">
+                            <div className="flex justify-center mb-4"><HandIcon /></div>
+                            <h3 className="text-2xl font-bold text-pink-800">Authentic Craftsmanship</h3>
+                            <p className="mt-2 text-gray-600">Sourced directly from master artisans, ensuring genuine quality and supporting traditional art forms.</p>
+                        </div>
+                        <div className="p-8">
+                            <div className="flex justify-center mb-4"><HeartIcon /></div>
+                            <h3 className="text-2xl font-bold text-pink-800">Ethical & Sustainable</h3>
+                            <p className="mt-2 text-gray-600">Committed to fair trade practices that empower our weavers and respect our planet.</p>
+                        </div>
+                        <div className="p-8">
+                            <div className="flex justify-center mb-4"><SparklesIcon /></div>
+                            <h3 className="text-2xl font-bold text-pink-800">Curated with Love</h3>
+                            <p className="mt-2 text-gray-600">Each saree is handpicked, blending timeless designs with a touch of contemporary style.</p>
+                        </div>
                     </div>
                 </div>
-            </footer>
+            </section>
 
-            {/* Confirm Delete Modal */}
-            {showConfirm && (
-                <ConfirmModal
-                    message="Are you sure you want to delete this product?"
-                    onConfirm={handleConfirmDelete}
-                    onCancel={handleCancelDelete}
-                />
-            )}
+            {/* --- Designers Section --- */}
+            <section ref={designersRef} className="py-20 px-6 md:px-20 bg-white/50">
+                <div className={`transition-all duration-1000 ${designersInView ? 'opacity-100' : 'opacity-0'} max-w-5xl mx-auto text-center`}>
+                    <h2 className="text-4xl font-bold text-pink-700 mb-14 font-['Yatra One'] tracking-wide">Meet Our Curators</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        {designers.map((designer, idx) => (
+                            <div key={designer.name} className={`transition-all duration-1000 ${designersInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${idx * 150}ms` }}>
+                                <img src={designer.img} alt={designer.name} className="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg border-4 border-white" />
+                                <h3 className="text-xl font-semibold text-amber-700">{designer.name}</h3>
+                                <p className="text-gray-600 mt-2">{designer.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* --- Saree Care Tips --- */}
+            <section ref={careTipsRef} className="py-20 px-6 md:px-20">
+                <div className={`transition-all duration-1000 ${careTipsInView ? 'opacity-100' : 'opacity-0'} max-w-7xl mx-auto`}>
+                    <h2 className="text-4xl font-bold text-center text-amber-700 mb-14 font-['Yatra One'] tracking-wide">Cherish Your Saree</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto text-center text-amber-800">
+                        {careTips.map((tip, idx) => (
+                            <div key={tip.title} className={`bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-amber-100 transition-all duration-1000 hover:shadow-2xl hover:-translate-y-2 ${careTipsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${idx * 150}ms` }}>
+                                <div className="flex justify-center mb-4 text-pink-400">{tip.icon}</div>
+                                <h3 className="text-xl font-bold text-pink-800">{tip.title}</h3>
+                                <p className="mt-2 text-gray-600">{tip.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* --- Your Actual Imported Components --- */}
+            <AnimatedTestimonialsDemo />
+
+            {/* --- Modals --- */}
+            {showConfirm && <ConfirmModal message="Are you sure you want to delete this product?" onConfirm={handleConfirmDelete} onCancel={handleCancelDelete} />}
         </div>
     );
 }

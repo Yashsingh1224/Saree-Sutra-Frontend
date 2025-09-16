@@ -11,6 +11,11 @@ import AdminProductUpload from "./components/Admin/AdminProductUpload";
 import CartPage from './components/Cart/CartPage';
 import CheckoutPage from './components/Checkout/CheckoutPage';
 import ShopPage from './components/Shop/ShopPage';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/Contact';
+import Footer from './components/Footer/Footer';
+import { ScrollToTop } from './components/ScrollToTop';
+import MyOrders from './pages/MyOrders';
 
 
 function App() {
@@ -20,6 +25,7 @@ function App() {
     <>
       <Router>
         <Navbar />
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
@@ -27,6 +33,9 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path='/shop' element={<ShopPage />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="my-orders" element={<MyOrders />} />
 
           <Route path="/admin" element={
             <AdminRoute>
@@ -36,7 +45,9 @@ function App() {
             <AdminRoute>
               <AdminProductUpload />
             </AdminRoute>} />
+
         </Routes>
+        <Footer />
       </Router>
 
     </>
